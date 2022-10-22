@@ -8,6 +8,19 @@ abstract class MongoModel<T> implements IModel<T> {
   constructor(model: Model<T>) {
     this._model = model;
   }
+
+  async update(_id: string, obj: T): Promise<T | null> {
+    if (!isValidObjectId(_id)) {
+      throw new Error(ErrorTypes.InvalidId);
+    }
+    
+    if (!obj) {
+      throw new Error(ErrorTypes.NotFound);
+    }
+
+    const update = await this._model.findByIdAndUpdate(_id, obj);
+    return update;
+  }
   
   async readOne(_id: string): Promise<T | null> {
     if (!isValidObjectId(_id)) {
