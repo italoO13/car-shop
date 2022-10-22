@@ -7,6 +7,10 @@ abstract class MongoModel<T> implements IModel<T> {
   constructor(model: Model<T>) {
     this._model = model;
   }
+  async read(): Promise<T[]> {
+    const response = await this._model.find();
+    return response;
+  }
 
   async create(obj: T): Promise<T> {
     const response = await this._model.create({ ...obj });
