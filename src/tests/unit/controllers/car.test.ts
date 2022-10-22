@@ -16,6 +16,7 @@ describe('Rotar Car controller', () => {
 
   before(() => {
     sinon.stub(carService, 'create').resolves(carMockWithId)
+    sinon.stub(carService, 'read').resolves([carMockWithId, carMockWithId])
 
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub().returns(res);
@@ -31,6 +32,17 @@ describe('Rotar Car controller', () => {
       await carController.create(req, res, next)
       expect((res.status as sinon.SinonStub).calledWith(201)).to.be.true;
       expect((res.json as sinon.SinonStub).calledWith(carMockWithId)).to.be.true
+    })
+
+  })
+  describe('Rota Get Car', () => {
+    describe('Quando a rota é "/"', () => {
+      it('Criado com sucesso', async() => {
+        await carController.read(req, res, next);
+        expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
+        expect((res.json as sinon.SinonStub).calledWith([carMockWithId, carMockWithId])).to.be.true
+      })
+
     })
 
   })
