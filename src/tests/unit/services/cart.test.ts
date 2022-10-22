@@ -4,6 +4,7 @@ import CarModel from '../../../models/Car';
 import { carMock, carMockWithId } from "../../mocks/car";
 import CarService from "../../../services/Car";
 import { ZodError } from "zod";
+import { ErrorTypes } from "../../../errors/catalog";
 
 describe('Rota Car na camada de service', () => {
   const carModel = new CarModel();
@@ -14,6 +15,9 @@ describe('Rota Car na camada de service', () => {
     sinon.stub(carModel, 'read')
       .onFirstCall().resolves([carMockWithId, carMockWithId])
       .onSecondCall().resolves([])
+    sinon.stub(carModel, 'readOne')
+      .onFirstCall().resolves(carMockWithId)
+      .onSecondCall().resolves(null)
   })
 
   after(() => {
@@ -49,6 +53,24 @@ describe('Rota Car na camada de service', () => {
       })
 
     })
+
+    describe('quando a rota é "/id"', () => {
+      it('deve retornar um car caso seja encontrado', async() => {
+        const readOneCar = await carService.readOne('validId');
+        expect(readOneCar).to.be.deep.eq(carMockWithId);
+      })
+      it('deve retonar um erro do type notfound se nenhum car', async() => {
+        let error:any
+        try {
+          await carService.readOne('validid');
+        } catch (err:any) {
+          error = err
+        }
+        expect(error.message).to.be.eq(ErrorTypes.NotFound)
+      })
+
+    })
+
 
 
   })
