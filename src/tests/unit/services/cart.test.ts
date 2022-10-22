@@ -105,4 +105,35 @@ describe('Rota Car na camada de service', () => {
 
   })
 
+  describe('Metodo Delete', () => {
+
+    beforeEach(() => {
+      sinon.restore()
+    })
+
+    describe('quando a rota é "/cars/id"', () => {
+      
+      it('quando não for encontrar um Car deve retornar um erro Not Found', async() => {
+        sinon.stub(carModel, 'delete')
+        .onFirstCall().resolves(null)
+
+        let error:any;
+        try {
+          await carService.delete('validId');
+        } catch (e) {
+          error = e;
+        }
+        expect(error.message).to.be.eq(ErrorTypes.NotFound)
+      })
+
+      it('Sucesso ao deleter um Car', async() => {
+        sinon.stub(carModel, 'delete').resolves(carMockWithId)
+        const deleteCar = await carService.delete('validId');
+        expect(deleteCar).to.be.eq(carMockWithId)
+      })
+
+    })
+
+  })
+
 })
