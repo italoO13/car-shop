@@ -11,7 +11,9 @@ describe('Rota Car na camada de service', () => {
 
   before(()=> {
     sinon.stub(carModel, 'create').resolves(carMockWithId)
-    sinon.stub()
+    sinon.stub(carModel, 'read')
+      .onFirstCall().resolves([carMockWithId, carMockWithId])
+      .onSecondCall().resolves([])
   })
 
   after(() => {
@@ -32,6 +34,22 @@ describe('Rota Car na camada de service', () => {
       }
       expect(error).to.be.instanceOf(ZodError)
     })
+
+  })
+
+  describe('Metodo Get de cars', () => {
+    describe('quando a rota é "/"', () => {
+      it('deve retornar todos os cars cadastrados em um array', async() => {
+        const readCars = await carService.read();
+        expect(readCars).to.be.deep.eq([carMockWithId, carMockWithId]);
+      })
+      it('deve retornar um array vazio caso não seja encontrado nenhum car', async() => {
+        const readCars = await carService.read();
+        expect(readCars).to.be.deep.eq([])
+      })
+
+    })
+
 
   })
 
