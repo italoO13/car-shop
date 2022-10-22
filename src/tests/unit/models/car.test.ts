@@ -17,6 +17,9 @@ describe('Rota de model', () => {
     sinon.stub(Model, 'findById')
       .onFirstCall().resolves(carMockWithId)
       .resolves(null)
+    sinon.stub(Model, 'findByIdAndUpdate')
+      .onFirstCall().resolves(carMockWithId)
+      .resolves(null)
     sinon.stub(Mongoose, 'isValidObjectId')
       .onFirstCall().returns(false)
       .resolves(true)
@@ -74,6 +77,21 @@ describe('Rota de model', () => {
 
   })
 
+  describe('Metodo Update', () => {
+    describe('quando a rota é "/cars/id"', () => {
+
+      it ('deve retornar um objeto de cars caso seja encontrado', async () => {
+        const update = await carModel.update('idValid', carMock);
+        expect(update).to.be.deep.eq(carMockWithId);
+      })
+
+      it ('Deve retornar null caso não seja encontrado nenhum objeto', async () => {
+        const update = await carModel.update('idValid', carMock);
+        expect(update).to.be.deep.eq(null);
+      })
+
+    })
+  })
 
 
 })
