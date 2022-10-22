@@ -16,7 +16,7 @@ const errorHandler: ErrorRequestHandler = (
   const mappedError = catalogErrors[messageASErrorType];
 
   if (mappedError) {
-    return res.status(mappedError.httpStatus).json(mappedError.message);
+    return res.status(mappedError.httpStatus).json({ error: mappedError.message });
   }
   console.log(err);
   return res.status(500).json({ message: 'internal erro' });
