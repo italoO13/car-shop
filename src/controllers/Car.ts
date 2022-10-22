@@ -9,6 +9,12 @@ class CarController {
     this._service = service;
   }
 
+  delete = async (req:Request, res:Response<ICar>, _next:NextFunction) => {
+    const { id } = req.params;
+    const response = await this._service.delete(id);
+    res.status(204).json(response);
+  };
+
   update = async (req:Request, res:Response<ICar>, _next:NextFunction) => {
     const { id } = req.params;
     const response = await this._service.update(id, req.body);
