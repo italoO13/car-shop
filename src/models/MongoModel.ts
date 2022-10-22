@@ -9,6 +9,15 @@ abstract class MongoModel<T> implements IModel<T> {
     this._model = model;
   }
 
+  async delete(_id: string): Promise<T | null> {
+    if (!isValidObjectId(_id)) {
+      throw new Error(ErrorTypes.InvalidId);
+    }
+    const deleteCar = this._model.findByIdAndDelete(_id);
+
+    return deleteCar;
+  }
+
   async update(_id: string, obj: T): Promise<T | null> {
     if (!isValidObjectId(_id)) {
       throw new Error(ErrorTypes.InvalidId);
