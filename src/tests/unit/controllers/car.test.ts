@@ -17,6 +17,7 @@ describe('Rotar Car controller', () => {
   before(() => {
     sinon.stub(carService, 'create').resolves(carMockWithId)
     sinon.stub(carService, 'read').resolves([carMockWithId, carMockWithId])
+    sinon.stub(carService, 'readOne').resolves(carMockWithId)
 
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub().returns(res);
@@ -45,7 +46,18 @@ describe('Rotar Car controller', () => {
 
     })
 
+    describe('Quando a rota é "/id"', () => {
+      it('Criado com sucesso', async() => {
+        req.params = {id:'validId'};
+        await carController.readOne(req, res, next);
+        expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
+        expect((res.json as sinon.SinonStub).calledWith(carMockWithId)).to.be.true
+      })
+
+    })
+
   })
+  
 
 
 })
