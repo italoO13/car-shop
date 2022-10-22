@@ -1,5 +1,6 @@
-import { Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { IModel } from '../interfaces/IModel';
+import { ErrorTypes } from '../errors/catalog';
 
 abstract class MongoModel<T> implements IModel<T> {
   protected _model: Model<T>;
@@ -7,6 +8,14 @@ abstract class MongoModel<T> implements IModel<T> {
   constructor(model: Model<T>) {
     this._model = model;
   }
+  
+  async readOne(_id: string): Promise<T | null> {
+    if (!isValidObjectId(_id)) {
+      throw new Error(ErrorTypes.InvalidId);
+    }
+    return this._model.findById(_id);
+  }
+
   async read(): Promise<T[]> {
     const response = await this._model.find();
     return response;
