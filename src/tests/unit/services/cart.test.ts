@@ -18,6 +18,9 @@ describe('Rota Car na camada de service', () => {
     sinon.stub(carModel, 'readOne')
       .onFirstCall().resolves(carMockWithId)
       .onSecondCall().resolves(null)
+    sinon.stub(carModel, 'update' )
+      .onFirstCall().resolves(carMockWithId)
+      .resolves(null)
   })
 
   after(() => {
@@ -72,6 +75,33 @@ describe('Rota Car na camada de service', () => {
     })
 
 
+
+  })
+
+  describe('Metodo Update',() => {
+    it('Criado com sucesso', async() => {
+      const update = await carService.update('idvalid', carMock)
+      expect(update).to.be.deep.eq(carMockWithId)
+    })
+    it('Falha de tipagem ao atualizar um novo Car', async() => {
+      let error:any
+      try {
+        await carService.update('idvalid', {});
+      } catch (err:any) {
+        error = err
+      }
+      expect(error).to.be.instanceOf(ZodError)
+    })
+    it('Car que deveria ser atualizado não foi encontrado', async() => {
+      let error:any
+      try {
+        await carService.update('idvalid', carMock);
+      } catch (err:any) {
+        error = err
+      }
+      expect(error.message).to.be.eq(ErrorTypes.NotFound)
+
+    })
 
   })
 
