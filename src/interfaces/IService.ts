@@ -3,4 +3,5 @@ export default interface IService<T> {
   read():Promise<T[]>
   readOne(_id: string):Promise<T>
   update(_id:string, obj:unknown):Promise<T>
+  delete(_id:string):Promise<T>
 }
