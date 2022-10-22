@@ -93,5 +93,43 @@ describe('Rota de model', () => {
     })
   })
 
+  describe('Metodo Delete', () => {
+
+    beforeEach(() => {
+      sinon.restore()
+      sinon.stub(Model, 'findByIdAndDelete')
+        .onFirstCall().resolves(carMockWithId)
+        .onSecondCall().resolves(carMockWithId)
+        .resolves(null)
+    })
+
+    afterEach(() => {
+      sinon.restore()
+    })
+
+
+    describe('quando a rota é "/cars/id"', () => {
+      
+      it('quando o id é invalido deve retornar erro do type InvalidId', async() => {
+        sinon.stub(Mongoose, 'isValidObjectId').returns(false)
+        let error:any;
+        try {
+          await carModel.delete('invalidId');
+        } catch (e) {
+          error = e;
+        }
+        expect(error.message).to.be.eq(ErrorTypes.InvalidId)
+      })
+
+      it('Sucesso ao deleter um Car', async() => {
+        sinon.stub(Mongoose, 'isValidObjectId').returns(true)
+        const deleteCar = await carModel.delete('validId');
+        expect(deleteCar).to.be.eq(carMockWithId)
+      })
+
+    })
+
+  })
+
 
 })
