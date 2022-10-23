@@ -13,4 +13,5 @@ type IMotorcycle = z.infer<typeof MotorcycleZodSchema>;
 export {
   MotorcycleZodSchema, 
   IMotorcycle,
+  categoryCar,
 };
